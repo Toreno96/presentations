@@ -10,3 +10,5 @@ Each subdirectory contains an `html` file. Simply open it in the browser, e.g. b
 $ open gnupg/gnupg_presentation.html  # macOS
 $ xdg-open gnupg/gnupg_presentation.html  # Linux
 ```
+
+For details, see <https://github.com/gnab/remark>.
