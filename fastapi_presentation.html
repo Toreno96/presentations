@@ -892,6 +892,11 @@ class: center, middle
 
 # Czy rzeczywiście jest production-ready?
 
+???
+
+Wspomnieć, że jest już używany w LESS\_
+
+
 ---
 
 class: center, middle
@@ -908,6 +913,23 @@ Czytelna, beginner-friendly
     </script>
     <script>
       var slideshow = remark.create({
+        // Navigation options
+          navigation: {
+            // Enable or disable navigating using scroll
+            // Default: true
+            // Alternatives: false
+            scroll: true,
+
+            // Enable or disable navigation using touch
+            // Default: true
+            // Alternatives: false
+            touch: false,
+
+            // Enable or disable navigation using click
+            // Default: false
+            // Alternatives: true
+            click: true,
+          },
         slideNumberFormat: '',
         countIncrementalSlides: false,
         highlightLines: true,
