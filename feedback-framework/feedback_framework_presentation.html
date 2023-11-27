@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700,400italic);
+
+      body {
+          font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Source Code Pro'; }
+
+      blockquote {
+          margin: 0;
+          padding: 15px;
+          background: #eee;
+          border-radius: 5px;
+      }
+
+      blockquote::before {
+          content: '\201C';
+      }
+
+      blockquote::after {
+          content: '\201D';
+      }
+
+      .footnote {
+          position: absolute;
+          bottom: 20px;
+      }
+      .footnote-char {
+          color: red;
+          font-weight: bold;
+      }
+
+      .small {
+          font-size: 10px;
+          font-weight: bold;
+      }
+
+      .pure-table {
+          /* Otherwise, border renders outside a table if the table is narrow */
+          border: none;
+      }
+
+      .left-column  {
+          width: 40%;
+          float: left;
+      }
+      .right-column {
+          width: 40%;
+          float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Mój feedback framework
+<!-- # Existing standards for country & language codes -->
+
+### Daniel Staśczak
+
+Made with <https://github.com/gnab/remark>
+
+---
+
+# Agenda
+
+- Przypomnienie sobie współpracy z daną osobą
+- Przejrzenie _poprzedniego_ mojego feedbacku dla danej osoby
+- [Development Career Paths 2.0](https://apptension.atlassian.net/wiki/spaces/INTERNAL/pages/1834975313/Development+2.0)
+- [Core values](https://apptension.atlassian.net/wiki/spaces/INTERNAL/pages/857669980/Core+Values)
+- Looking Ahead: START
+- Looking back: STOP
+- Sekcja pytań zamkniętych
+
+---
+
+# Przypomnienie sobie współpracy z daną osobą
+
+Szczególnie, gdy ostatni raz pracowałem z nią x miesięcy temu.
+
+Robię to poprzez:
+
+--
+
+- Przejrzenie DM na slacku
+--
+
+- (opcjonalnie) Przejrzenie kanałów projektowych  
+  `⌘+f`, `in:@project-foo with:@me with:@jdoe<enter>`
+--
+
+- Przypomina jak komunikowało mi się z daną osobą
+- Czy były jakieś bariery w komunikacji
+
+---
+
+# Przejrzenie _poprzedniego_ mojego feedbacku dla danej osoby
+
+--
+
+- Przypomnienie sobie za co ją wtedy chwaliłem
+--
+
+- Przypomnienie sobie co wtedy uznałem do poprawy
+--
+
+- Czy dalej powyższe są aktualne
+--
+
+- (opcjonalnie) Copy-paste np. Present moment: CONTINUE
+
+---
+
+# [Development Career Paths 2.0](https://apptension.atlassian.net/wiki/spaces/INTERNAL/pages/1834975313/Development+2.0)
+
+--
+
+- _Pytam_ na jakim poziomie dana osoba jest, i czy stara się o awans
+
+--
+- Porównuję:
+    - Dla poziomu, na którym dana osoba jest (np. Regular 2)
+    - Plus jeden wyżej (np. Regular 3)
+--
+    - **Alternatywnie**: dla poziomów, między jakimi przechodzi (np. Regular 2 → 3).
+
+---
+
+# [Core values](https://apptension.atlassian.net/wiki/spaces/INTERNAL/pages/857669980/Core+Values)
+
+Było dla mnie szczególnie istotne, gdy w templatce mieliśmy explicit pytanie o spełnianie przez daną osobę core values.  
+Obecnie — nice to have.
+
+--
+
+Na przykład, wśród "DOS" z "Dedication to innovation":
+- "try out new technologies"  
+    golang
+--
+- "think twice before you try to solve a problem"  
+    często zwraca uwagę na performance rozwiązania, które się z nim konsultuje
+
+---
+
+# Looking Ahead: START
+
+- zostawienie osoby z actionable items, np.
+--
+
+    - jeśli widzę, że dana osoba ma dużo ciekawych tematów  
+      → zasugerowanie devtalków
+--
+    - jeśli widzę że dana osoba ma problem z gramatyką w języku angielskim lub pisaniem dokumentacji  
+      → zasugerowanie Grammarly i literatury
+--
+    - jeśli BE Junior  
+      → podrzucenie literatury, artykułów, docsów
+--
+    - ofc ciężej zostawić actionable items dla np. PMa będąc devem czy dla Seniora będąc Regularem; **that's OK**.
+
+---
+
+# Looking Ahead: START, c.d.
+
+> Technicznie rekomendowałbym w pierwszej kolejności szlifowanie wszelkiego rodzaju dobrych praktyk stricte w Pythonie:
+> - "Efektywny Python" S. Bratkina (mamy w biblioteczce)
+> - Poznanie lepiej wbudowanych bibliotek, chociażby przeglądając <https://docs.python.org/3/library/index.html> od Text Processing Services w dół.
+> - Oraz zewnętrznych bibliotek, chociażby przeglądając dokumentację Django: <https://docs.djangoproject.com/en/4.2/> i <https://www.django-rest-framework.org/> (cała zakładka "API Guide").
+> - Aby lepiej znać rekomendowany styl Pythona i "gotowe klocki", jakich można użyć do danego problemu, również aby zminimalizować komentarze na ten temat w przyszłych code review.
+
+---
+
+# Looking Ahead: START, c.d.
+
+> Czasami mam wrażenie że twój angielski (zarówno pisany jak i mówiony) mógłby być jeszcze lepszy. Jest on zrozumiały, natomiast można by popracować nad stylem i bardziej zaawansowaną gramatyką, aby to co piszesz (przede wszystkim w dokumentacji) mogło być jeszcze bardziej precyzyjne.
+>
+> Sugerowałbym spróbowanie tooli takich jak:
+> - <https://app.grammarly.com/apps>
+> - <https://languagetool.org/?force_language=1>
+> - (pod kątem komentarzy i docstringów w kodzie) wbudowanego w Jetbrains IDE language checkera.
+
+---
+
+# Looking back: STOP
+
+--
+
+- Nie miałem (na szczęście?) okazji za często wypełniać tej sekcji
+
+--
+- Co na mnie najlepiej działa: podanie konkretnych sytuacji
+
+--
+- Ofc nie każdy może mieć takie same preferencje (może warto zapytać?)
+
+--
+- Po konkretne techniki (FUKO, NVC & stuff) odsyłam do nagrań z Knowledge Shotów
+
+---
+
+# Sekcja pytań zamkniętych
+
+- Nie bójmy się `No opinion` jeśli nie jesteśmy w stanie na coś odpowiedzieć
+
+---
+
+class: center, middle
+
+# Pytania?
+
+---
+
+class: center, middle
+
+# Dziękuję za uwagę! 💚
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        // Navigation options
+          navigation: {
+            // Enable or disable navigating using scroll
+            // Default: true
+            // Alternatives: false
+            scroll: true,
+
+            // Enable or disable navigation using touch
+            // Default: true
+            // Alternatives: false
+            touch: false,
+
+            // Enable or disable navigation using click
+            // Default: false
+            // Alternatives: true
+            click: false,
+          },
+        slideNumberFormat: '',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightStyle: "default",
+      });
+    </script>
+  </body>
+</html>
