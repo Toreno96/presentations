@@ -7,8 +7,8 @@ This is a repository for storing various presentations of mine, e.g. for devtalk
 Each subdirectory contains an `html` file. Simply open it in the browser, e.g. by using:
 
 ```shell
-$ open gnupg/gnupg_presentation.html  # macOS
-$ xdg-open gnupg/gnupg_presentation.html  # Linux
+$ open gnupg/presentation.html  # macOS
+$ xdg-open gnupg/presentation.html  # Linux
 ```
 
 For details, see <https://github.com/gnab/remark>.
