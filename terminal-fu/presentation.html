@@ -1,0 +1,2397 @@
+<!-- vim: set filetype=markdown: -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700,400italic);
+
+      body {
+          font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Source Code Pro'; }
+
+      .footnote {
+          position: absolute;
+          bottom: 20px;
+      }
+      .footnote-char {
+          color: red;
+          font-weight: bold;
+      }
+      .footnote-url {
+          font-size: 80%;
+      }
+
+      .small {
+          font-size: 10px;
+          font-weight: bold;
+      }
+
+      .pure-table {
+          /* Otherwise, border renders outside a table if the table is narrow */
+          border: none;
+      }
+
+      .left-column  {
+          width: 40%;
+          float: left;
+      }
+      .right-column {
+          width: 40%;
+          float: right;
+      }
+
+      code {
+          background: #F0F0F0;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Terminal-Fu 101
+# Introduction to unix tools
+
+### Daniel Staśczak
+
+Made with <https://github.com/gnab/remark>
+
+---
+
+# Agenda
+
+- What is Unix?
+- Unix philosophy
+- Differences between those tools on macOS and Linux
+- Let's learn:
+    - `man`
+    - `ls`
+    - `cd`
+    - `cp`
+    - `mv`
+    - `rm`
+- This may be the first part of the series! .footnote-char[¹]
+
+.footnote[
+.footnote-char[¹] Let me know after the devtalk if you want more!
+]
+
+<!--
+
+    - `du`
+    - `sort`
+    - `grep`
+
+-->
+
+---
+
+# What is Unix?
+
+- A family of multitasking, multi-user operating systems. .footnote-char[¹]
+- Characterized by a modular design called the “Unix philosophy”. .footnote-char[¹]
+- Released in the **early 1970s**. .footnote-char[¹]
+- Initially intended for use inside the Bell System companies. .footnote-char[¹]
+- Licensed to outside parties in the **late 1970s**. .footnote-char[¹]
+
+.footnote[
+.footnote-char[¹] .footnote-url[<https://en.wikipedia.org/wiki/Unix?oldid=1198876101>]
+]
+
+---
+
+# What is Unix?
+
+- A family of multitasking, multi-user operating systems. .footnote-char[¹]
+- Characterized by a modular design called the “Unix philosophy”. .footnote-char[¹]
+- Released in the **early 1970s**. .footnote-char[¹]
+- Initially intended for use inside the Bell System companies. .footnote-char[¹]
+- Licensed to outside parties in the **late 1970s**. .footnote-char[¹]
+
+By comparison:
+- The first computer with a GUI was **1973's** Xerox Alto. .footnote-char[²]
+- However, it never reached commercial production. .footnote-char[²]
+- GUI was popularized in the **mid-1980s**, with the 1984's release of the first Apple Macintosh. .footnote-char[²] .footnote-char[³]
+
+.footnote[
+.footnote-char[¹] .footnote-url[<https://en.wikipedia.org/wiki/Unix?oldid=1198876101>]  
+.footnote-char[²] .footnote-url[<https://en.wikipedia.org/wiki/Graphical_user_interface?&oldid=1201518925#History>]  
+.footnote-char[³] .footnote-url[<https://en.wikipedia.org/wiki/Macintosh_128K?oldid=1204714220>]
+]
+
+---
+
+# Unix philosophy
+
+- Programs that **do one thing and do it well**. .footnote-char[¹]
+- Programs that **work together**. .footnote-char[¹]
+
+.footnote[
+.footnote-char[¹] .footnote-url[<https://en.wikipedia.org/wiki/Unix_philosophy?oldid=1208232498>]
+]
+
+---
+
+# Do one thing
+
+## The modern approach (do many things)
+
+Look at any IDE (e.g. PyCharm, WebStorm); they integrate:
+- built-in text editor
+- built-in debugger
+- built-in compiler or interpreter
+- built-in version control system
+- built-in spellchecker
+- etc etc
+
+--
+
+## The unix approach
+
+In the “Unix world” all of the above would be separate apps.
+
+---
+
+# Do one thing
+
+Pros 👍
+
+- You can choose any part of your workflow modularly.
+- You don't like your current debugger… ?
+- … Feel free to find another, without the need to change the rest.
+
+--
+
+Cons 👎
+
+- You need to learn each of those parts separately.
+- You need to integrate them yourself.
+
+---
+
+# Do one thing
+
+**My goal** is not to tell you one is better than another.
+
+--
+
+Those are just tools.
+
+They can complement your existing workflow.
+
+They require time and commitment to learn them well.
+
+**My goal** is to show you the basics and make the learning curve less steep.
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* `|` sort -hr `|` head
+```
+
+`|` → pipe operator
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ `du -sh` projects/* | sort -hr | head
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh `projects/*` | sort -hr | head
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+`projects/*` → all files and subdirectories in directory `projects`
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | `sort -hr` | head
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+`projects/*` → all files and subdirectories in directory `projects`
+
+`sort` → sorts (duh) lines of text
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | `head`
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+`projects/*` → all files and subdirectories in directory `projects`
+
+`sort` → sorts (duh) lines of text
+
+`head` → displays first lines of a text
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du `-sh` projects/* | sort `-hr` | head
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+`projects/*` → all files and subdirectories in directory `projects`
+
+`sort` → sorts (duh) lines of text
+
+`head` → displays first lines of a text
+
+⚠️ I will explain options later, don't worry about them now.
+
+???
+
+Don't worry about the options followed by the hyphen now, I will explain them in the later part of the presentation, now you just need to be aware that they exist
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head
+```
+
+`|` → pipe operator
+
+`du` → displays disk usage statistics; mnemonic: `[d]isk [u]sage`
+
+`projects/*` → all files and subdirectories in directory `projects`
+
+`sort` → sorts (duh) lines of text
+
+`head` → displays first lines of a text
+
+⚠️ I will explain options later, don't worry about them now
+
+What will be the result of that pipeline?
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head
+7.1G	projects/buttercms
+260M	projects/homehub
+183M	projects/countme-app
+120M	projects/teamdeck-app
+111M	projects/onetimepass
+ 57M	projects/imax-backend
+ 56M	projects/oxefit-activation
+ 49M	projects/lora-prototype-plugin
+ 49M	projects/countme-backend
+ 36M	projects/td-slackbot
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head
+*7.1G	projects/buttercms
+260M	projects/homehub
+183M	projects/countme-app
+120M	projects/teamdeck-app
+111M	projects/onetimepass
+ 57M	projects/imax-backend
+ 56M	projects/oxefit-activation
+ 49M	projects/lora-prototype-plugin
+ 49M	projects/countme-backend
+ 36M	projects/td-slackbot
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head | nl
+     1	7.1G	projects/buttercms
+     2	260M	projects/homehub
+     3	183M	projects/countme-app
+     4	120M	projects/teamdeck-app
+     5	111M	projects/onetimepass
+     6	 57M	projects/imax-backend
+     7	 56M	projects/oxefit-activation
+     8	 49M	projects/lora-prototype-plugin
+     9	 49M	projects/countme-backend
+    10	 36M	projects/td-slackbot
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head `| nl`
+     1	7.1G	projects/buttercms
+     2	260M	projects/homehub
+     3	183M	projects/countme-app
+     4	120M	projects/teamdeck-app
+     5	111M	projects/onetimepass
+     6	 57M	projects/imax-backend
+     7	 56M	projects/oxefit-activation
+     8	 49M	projects/lora-prototype-plugin
+     9	 49M	projects/countme-backend
+    10	 36M	projects/td-slackbot
+```
+
+`nl` → adds line numbering; mnemonic: `[n]umber [l]ines`
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head | nl
+     `1`	7.1G	projects/buttercms
+     `2`	260M	projects/homehub
+     `3`	183M	projects/countme-app
+     `4`	120M	projects/teamdeck-app
+     `5`	111M	projects/onetimepass
+     `6`	 57M	projects/imax-backend
+     `7`	 56M	projects/oxefit-activation
+     `8`	 49M	projects/lora-prototype-plugin
+     `9`	 49M	projects/countme-backend
+    `10`	 36M	projects/td-slackbot
+```
+
+`nl` → adds line numbering; mnemonic: `[n]umber [l]ines`
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+$ du -sh projects/* | sort -h | head -3
+  0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+$ du -ah projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+6.0G    projects/buttercms/latest.dump
+417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+*$ du -sh projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+$ du -sh projects/* | sort -h | head -3
+  0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+$ du -ah projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+6.0G    projects/buttercms/latest.dump
+417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+*$ du -sh projects/* | sort -h | head -3
+  0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+$ du -ah projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+6.0G    projects/buttercms/latest.dump
+417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head -3
+*7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+$ du -sh projects/* | sort -h | head -3
+* 0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+$ du -ah projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+6.0G    projects/buttercms/latest.dump
+417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+$ du -sh projects/* | sort -h | head -3
+  0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+*$ du -ah projects/* | sort -hr | head -3
+7.1G    projects/buttercms
+6.0G    projects/buttercms/latest.dump
+417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+```bash
+$ du -sh projects/* | sort -hr | head -3
+*7.1G    projects/buttercms
+260M    projects/homehub
+183M    projects/countme-app
+```
+
+```bash
+$ du -sh projects/* | sort -h | head -3
+  0B    projects/hackathon
+4.0K    projects/graphql-getting-started
+4.0K    projects/vuejs-intro
+```
+
+```bash
+$ du -ah projects/* | sort -hr | head -3
+*7.1G    projects/buttercms
+*6.0G    projects/buttercms/latest.dump
+*417M    projects/buttercms/node_modules
+```
+
+---
+
+# Programs that work together AKA pipelines
+
+.center[<img src="images/unlimited-power.gif">]
+
+… as long as you know the right tools.
+
+---
+
+# macOS vs. Linux
+
+<!--
+
+- macOS is a certified Unix.
+- Linux is _not_ an Unix.
+- Linux is Unix-_like_ (AKA \*nix or UN\*x).
+
+-->
+
+- macOS utilities are derived from BSD operating system.
+- Linux uses GNU core utilities (AKA coreutils).
+--
+
+- coreutils support long options as synonyms for short options and allow options
+  after the regular arguments.
+- macOS/BSD utilities does not.
+--
+
+- Behavior and available options may differ between them.
+
+---
+
+# macOS vs. Linux
+
+## Linux
+
+```bash
+$ ls -1
+egg_dir
+egg_file
+ham_dir
+ham_file
+spam_dir
+spam_file
+```
+
+```bash
+$ ls -1 --group-directories-first
+egg_dir
+ham_dir
+spam_dir
+egg_file
+ham_file
+spam_file
+```
+
+`ls` → list files and directories; mnemonic: `[l]i[s]t`
+
+---
+
+# macOS vs. Linux
+
+## Linux
+
+```bash
+$ ls -1
+egg_dir
+egg_file
+ham_dir
+ham_file
+spam_dir
+spam_file
+```
+
+```bash
+$ ls -1 `--group-directories-first`
+egg_dir
+ham_dir
+spam_dir
+egg_file
+ham_file
+spam_file
+```
+
+`ls` → list files and directories; mnemonic: `[l]i[s]t`
+
+---
+
+# macOS vs. Linux
+
+## Linux
+
+```bash
+$ ls -1
+*egg_dir
+egg_file
+*ham_dir
+ham_file
+*spam_dir
+spam_file
+```
+
+```bash
+$ ls -1 --group-directories-first
+*egg_dir
+*ham_dir
+*spam_dir
+egg_file
+ham_file
+spam_file
+```
+
+`ls` → list files and directories; mnemonic: `[l]i[s]t`
+
+---
+
+# macOS vs. Linux
+
+## macOS
+
+```bash
+$ ls --group-directories-first
+ls: unrecognized option `--group-directories-first'
+```
+
+---
+
+# macOS vs. Linux
+
+## Linux
+
+```bash
+$ ls -1 | wc -l
+6
+```
+
+## macOS
+
+```bash
+$ ls -1 | wc -l
+       6
+```
+
+`wc` → counts lines, words, and bytes; mnemonic: `[w]ords [c]ount`
+
+`wc -l` → counts only lines
+
+---
+
+# macOS vs. Linux
+
+## Linux
+
+```bash
+$ ls -1 | wc -l
+*6
+```
+
+## macOS
+
+```bash
+$ ls -1 | wc -l
+*      6
+```
+
+`wc` → counts lines, words, and bytes; mnemonic: `[w]ords [c]ount`
+
+`wc -l` → counts only lines
+
+---
+
+# macOS vs. Linux
+
+However, you can install GNU coreutils on macOS!
+
+```bash
+$ brew install \
+    coreutils \
+    findutils \
+    gnu-tar \
+    gnu-sed \
+    gawk \
+    gnutls \
+    gnu-indent \
+    gnu-getopt \
+    grep
+```
+
+Then:
+
+```bash
+$ gls --group-directories-first
+```
+
+```bash
+$ gwc -l
+```
+
+Prefixed by `g` because `[g]nu`
+
+---
+
+# macOS vs. Linux
+
+However, you can install GNU coreutils on macOS!
+
+```bash
+$ brew install \
+    coreutils \
+    findutils \
+    gnu-tar \
+    gnu-sed \
+    gawk \
+    gnutls \
+    gnu-indent \
+    gnu-getopt \
+    grep
+```
+
+Then:
+
+```bash
+*$ gls --group-directories-first
+```
+
+```bash
+*$ gwc -l
+```
+
+Prefixed by `g` because `[g]nu`
+
+---
+
+# macOS vs. Linux
+
+Main takeaway?
+
+--
+
+⚠️ Watch out when writing shell scripts that are targeted to _both_ macOS and Linux.
+
+Consider installing GNU coreutils on macOS.
+
+---
+
+class: center, middle
+
+# Any questions so far?
+
+In a moment: the most useful unix tool of all!
+
+???
+
+In a moment I'll teach you a few unix tools,
+in a more focused approach,
+each one separately.
+
+I'll finally explain options.
+
+---
+
+# `man` → Manual
+
+Mnemonic: `[man]ual`
+
+```bash
+$ man ls
+```
+```bash
+$ man du
+```
+```bash
+$ man wc
+```
+
+---
+
+# `man` → Manual
+
+```bash
+$ man ls
+```
+
+```diff
+LS(1)                 General Commands Manual                LS(1)
+
+NAME
+     ls – list directory contents
+
+SYNOPSIS
+     ls [-@ABCFGHILOPRSTUWabcdefghiklmnopqrstuvwxy1%,]
+        [--color=when] [-D format] [file ...]
+
+DESCRIPTION
+     For each operand that names a file of a type other than
+     directory, ls displays its name as well as any requested,
+     associated information.
+     …
+```
+
+---
+
+# `man` → Manual
+
+```bash
+$ man ls
+```
+
+```diff
+     …
+     The following options are available:
+
+     -@      Display extended attribute keys and sizes in long
+             (-l) output.
+
+     -A      Include directory entries whose names begin with a
+             dot (‘.’) except for . and ...  Automatically set for
+             the super-user unless -I is specified.
+     …
+```
+
+ℹ️ Scroll the manual using mouse/touchpad scroll or (like a pro) using:
+- `d` → down
+- `u` → up
+- `g` → go to the top (beginning)
+
+---
+
+# `man` → Manual
+
+```bash
+$ man ls
+```
+
+```diff
+     …
+EXAMPLES
+     List the contents of the current working directory in long
+     format:
+
+           $ ls -l
+
+     In addition to listing the contents of the current working
+     directory in long format, show inode numbers, file flags (see
+     chflags(1)), and suffix each filename with a symbol
+     representing its file type:
+
+           $ ls -lioF
+     …
+```
+
+---
+
+# `man` → Manual
+
+ℹ️ Search using:
+- `/` (forward slash), e.g. `/EXAMPLES`
+- `n` → next result
+- `N` → previous result
+
+---
+
+# `man` → Manual
+
+`man` works _not only_ for unix tools!
+
+```bash
+$ man git
+```
+
+```bash
+$ man git-add
+```
+
+```bash
+$ man git-commit
+```
+
+```bash
+$ man brew
+```
+
+```bash
+$ man npm
+```
+
+```bash
+$ man jq
+```
+
+---
+
+# `man` → Manual
+
+… as long as the specific tool provides manual pages
+
+```diff
+$ man chamber
+No manual entry for chamber
+$ man aws
+No manual entry for aws
+$ man docker
+No manual entry for docker
+$ man chamber
+No manual entry for chamber
+$ man heroku
+No manual entry for heroku
+```
+
+---
+
+# `man` → Manual
+
+In those cases, try:
+- `-h` or `--help` option (those are synonyms)
+- `help` subcommand
+
+```diff
+$ heroku -h
+```
+
+```diff
+$ heroku --help
+```
+
+```diff
+$ aws help
+```
+
+---
+
+# `man` → Manual
+
+It's the most **trustworthy** source of knowledge about unix tools.
+
+---
+
+class: center, middle
+
+# Any questions about `man`?
+
+Next: `ls`
+
+---
+
+# `ls` → List files and directories
+
+Mnemonic: `[l]i[s]t`
+
+```bash
+$ ls
+```
+
+```bash
+$ ls <file>
+```
+
+```bash
+$ ls <file1> <file2>
+```
+
+```bash
+$ ls <directory>
+```
+
+<!--
+
+```bash
+$ ls *
+```
+
+```bash
+$ ls **
+```
+
+-->
+
+---
+
+# `ls` → List files and directories
+
+List files in the current working directory:
+
+```bash
+ ~/development/projects/onetimepass$ ls
+ CHANGELOG.md            build                   pdm.lock
+ Dockerfile              dist                    pyproject.toml
+ LICENSE                 docker-entrypoint.sh    requirements.txt
+ README.md               docs                    setup.py
+ ROADMAP.md              issues.md               tests
+ __pypackages__          onetimepass
+```
+
+---
+
+# `ls` → List files and directories
+
+List files in the current working directory:
+
+```bash
+ `~/development/projects/onetimepass`$ ls
+ CHANGELOG.md            build                   pdm.lock
+ Dockerfile              dist                    pyproject.toml
+ LICENSE                 docker-entrypoint.sh    requirements.txt
+ README.md               docs                    setup.py
+ ROADMAP.md              issues.md               tests
+ __pypackages__          onetimepass
+```
+
+---
+
+# `ls` → List files and directories
+
+List files in the current working directory:
+
+```bash
+ ~/development/projects/onetimepass$ `ls`
+ CHANGELOG.md            build                   pdm.lock
+ Dockerfile              dist                    pyproject.toml
+ LICENSE                 docker-entrypoint.sh    requirements.txt
+ README.md               docs                    setup.py
+ ROADMAP.md              issues.md               tests
+ __pypackages__          onetimepass
+```
+
+---
+
+# `ls` → List files and directories
+
+List files in the current working directory:
+
+```bash
+ ~/development/projects/onetimepass$ ls
+* CHANGELOG.md            build                   pdm.lock
+* Dockerfile              dist                    pyproject.toml
+* LICENSE                 docker-entrypoint.sh    requirements.txt
+* README.md               docs                    setup.py
+* ROADMAP.md              issues.md               tests
+* __pypackages__          onetimepass
+```
+
+---
+
+# `ls` → List files and directories
+
+List specific file(s):
+
+```bash
+~/development/projects/onetimepass$ ls README.md
+README.md
+```
+
+--
+
+```bash
+~/development/projects/onetimepass$ ls README.md CHANGELOG.md
+CHANGELOG.md    README.md
+```
+
+--
+
+```bash
+~/development/projects/onetimepass$ ls nonexisting.txt
+ls: nonexisting.txt: No such file or directory
+```
+
+---
+
+# `ls` → List files and directories
+
+List content of a specific directory:
+
+```bash
+~/development/projects/onetimepass$ ls docs
+database-import-conflict.png    otp_subcommands.py
+database-import.png             show-alias-wait.png
+keyring-not-installed.png       show-alias.png
+master-key-init.png             ui_mock.sh
+master-key-show.png             usage.png
+otp-shell-completion.png        wait-for-next-otp.gif
+otp_options.py
+```
+
+---
+
+# `ls` → List files and directories
+
+List content of specific directories:
+
+```bash
+~/development/projects/onetimepass$ ls docs dist
+dist:
+onetimepass-0.1.1.dev32+g2ce3488-py3-none-any.whl
+onetimepass-0.1.1.dev32+g2ce3488.tar.gz
+
+docs:
+database-import-conflict.png    otp_subcommands.py
+database-import.png             show-alias-wait.png
+keyring-not-installed.png       show-alias.png
+master-key-init.png             ui_mock.sh
+master-key-show.png             usage.png
+otp-shell-completion.png        wait-for-next-otp.gif
+otp_options.py
+```
+
+---
+
+# `ls` → List files and directories
+
+List content of specific directories:
+
+```bash
+~/development/projects/onetimepass$ ls docs dist
+*dist:
+onetimepass-0.1.1.dev32+g2ce3488-py3-none-any.whl
+onetimepass-0.1.1.dev32+g2ce3488.tar.gz
+
+*docs:
+database-import-conflict.png    otp_subcommands.py
+database-import.png             show-alias-wait.png
+keyring-not-installed.png       show-alias.png
+master-key-init.png             ui_mock.sh
+master-key-show.png             usage.png
+otp-shell-completion.png        wait-for-next-otp.gif
+otp_options.py
+```
+
+---
+
+<!--
+# `ls` → List files and directories
+
+List files and content of top-level directories in the current working directory:
+
+```bash
+~/development/projects/onetimepass$ ls *
+CHANGELOG.md            ROADMAP.md              pyproject.toml
+Dockerfile              docker-entrypoint.sh    requirements.txt
+LICENSE                 issues.md               setup.py
+README.md               pdm.lock
+
+__pypackages__:
+3.10
+
+build:
+
+dist:
+onetimepass-0.1.1.dev32+g2ce3488-py3-none-any.whl
+onetimepass-0.1.1.dev32+g2ce3488.tar.gz
+
+docs:
+…
+```
+
+
+# `ls` → List files and directories
+
+List files and content recursively:
+
+```bash
+~/development/projects/onetimepass$ ls **
+CHANGELOG.md
+Dockerfile
+LICENSE
+README.md
+ROADMAP.md
+__pypackages__/3.10/bin/cmark
+__pypackages__/3.10/bin/identify-cli
+__pypackages__/3.10/bin/nodeenv
+__pypackages__/3.10/bin/otp
+__pypackages__/3.10/bin/pre-commit
+…
+```
+-->
+
+# `ls` → Useful options
+
+<!--
+
+```bash
+$ ls -A            # Show hidden files
+$ ls -F            # Display file type indicator
+$ ls -l            # The long format
+$ ls -h            # Human-readable filesize
+$ ls -D <format>   # Format datetime
+$ ls --color=auto  # Colorize the output
+```
+
+-->
+
+```bash
+$ ls -A            # Show hidden files
+$ ls -F            # Display file type indicator
+$ ls --color=auto  # Colorize the output
+```
+
+---
+
+# `ls -A` → Show hidden files
+
+Mnemonic: `show [A]ll files (including the hidden ones)`
+
+```bash
+$ ls
+CHANGELOG.md            build                   pdm.lock
+Dockerfile              dist                    pyproject.toml
+LICENSE                 docker-entrypoint.sh    requirements.txt
+README.md               docs                    setup.py
+ROADMAP.md              issues.md               tests
+__pypackages__          onetimepass
+```
+
+---
+
+# `ls -A` → Show hidden files
+
+Mnemonic: `show [A]ll files (including the hidden ones)`
+
+```bash
+$ ls -A
+.DS_Store               CHANGELOG.md            docs
+.git                    Dockerfile              issues.md
+.git-blame-ignore-revs  LICENSE                 onetimepass
+.github                 README.md               pdm.lock
+.gitignore              ROADMAP.md              pyproject.toml
+.idea                   __pypackages__          requirements.txt
+.pdm-python             build                   setup.py
+.pre-commit-config.yaml dist                    tests
+.venv                   docker-entrypoint.sh
+```
+
+--
+
+Files prefixed by `.` (dot), e.g. `.gitignore` → hidden files
+
+---
+
+# `ls -F` → Display file type indicator
+
+Mnemonic: `[F]ile type indicator`
+
+```bash
+$ ls -F
+CHANGELOG.md            build/                  pdm.lock
+Dockerfile              dist/                   pyproject.toml
+LICENSE                 docker-entrypoint.sh*   requirements.txt
+README.md               docs/                   setup.py
+ROADMAP.md              issues.md               tests/
+__pypackages__/         onetimepass/
+```
+
+ℹ️ See `man ls`, `/-F` for details
+
+---
+
+# `ls -F` → Display file type indicator
+
+Mnemonic: `[F]ile type indicator`
+
+```bash
+$ ls -F
+CHANGELOG.md            build`/`                  pdm.lock
+Dockerfile              dist`/`                   pyproject.toml
+LICENSE                 docker-entrypoint.sh*   requirements.txt
+README.md               docs`/`                   setup.py
+ROADMAP.md              issues.md               tests`/`
+__pypackages__`/`         onetimepass`/`
+```
+
+ℹ️ See `man ls`, `/-F` for details
+
+`/` → directory
+
+---
+
+# `ls -F` → Display file type indicator
+
+Mnemonic: `[F]ile type indicator`
+
+```bash
+$ ls -F
+CHANGELOG.md            build/                  pdm.lock
+Dockerfile              dist/                   pyproject.toml
+LICENSE                 docker-entrypoint.sh`*`   requirements.txt
+README.md               docs/                   setup.py
+ROADMAP.md              issues.md               tests/
+__pypackages__/         onetimepass/
+```
+
+ℹ️ See `man ls`, `/-F` for details
+
+`/` → directory
+
+`*` → executable
+
+---
+
+# `ls -F` → Display file type indicator
+
+Mnemonic: `[F]ile type indicator`
+
+```bash
+$ ls -F
+CHANGELOG.md            build/                  pdm.lock
+Dockerfile              dist/                   pyproject.toml
+LICENSE                 docker-entrypoint.sh*   requirements.txt
+README.md               docs/                   setup.py
+ROADMAP.md              issues.md               tests/
+__pypackages__/         onetimepass/
+```
+
+ℹ️ See `man ls`, `/-F` for details
+
+`/` → directory
+
+`*` → executable
+
+etc…
+
+---
+
+<!--
+
+# `ls -l` → List files in the long format
+
+Mnemonic: `The [l]ong format`
+
+```bash
+$ `ls -l` | head -8
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067  4 gru  2021 LICENSE
+-rw-r--r--   1 dstasczak  staff   9496  9 kwi  2022 README.md
+-rw-r--r--   1 dstasczak  staff   2295 16 gru 15:26 ROADMAP.md
+drwxr-xr-x   5 dstasczak  staff    160 18 gru 16:41 __pypackages__
+drwxr-xr-x   2 dstasczak  staff     64 28 gru 23:17 build
+```
+
+ℹ️ See `man ls`, `/The Long Format` for details
+
+-->
+
+<!--
+
+# `ls -l` → List files in the long format
+
+Mnemonic: `The [l]ong format`
+
+```bash
+$ ls -l | head -8
+total 240
+-`rw-r--r--`   1 dstasczak  staff   5793 28 gru 23:17 CHANGELOG.md
+-`rw-r--r--`   1 dstasczak  staff    792 30 cze  2023 Dockerfile
+-`rw-r--r--`   1 dstasczak  staff   1067  4 gru  2021 LICENSE
+-`rw-r--r--`   1 dstasczak  staff   9496  9 kwi  2022 README.md
+-`rw-r--r--`   1 dstasczak  staff   2295 16 gru 15:26 ROADMAP.md
+d`rwxr-xr-x`   5 dstasczak  staff    160 18 gru 16:41 __pypackages__
+d`rwxr-xr-x`   2 dstasczak  staff     64 28 gru 23:17 build
+```
+
+ℹ️ See `man ls`, `/The Long Format` for details
+
+`rw-r--r--` → file permissions; see `man ls`, `/owner permissions` for details
+
+-->
+
+<!--
+
+# `ls -l` → List files in the long format
+
+Mnemonic: `The [l]ong format`
+
+```bash
+$ ls -l | head -8
+total 240
+-rw-r--r--   1 `dstasczak  staff`   5793 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 `dstasczak  staff`    792 30 cze  2023 Dockerfile
+-rw-r--r--   1 `dstasczak  staff`   1067  4 gru  2021 LICENSE
+-rw-r--r--   1 `dstasczak  staff`   9496  9 kwi  2022 README.md
+-rw-r--r--   1 `dstasczak  staff`   2295 16 gru 15:26 ROADMAP.md
+drwxr-xr-x   5 `dstasczak  staff`    160 18 gru 16:41 __pypackages__
+drwxr-xr-x   2 `dstasczak  staff`     64 28 gru 23:17 build
+```
+
+ℹ️ See `man ls`, `/The Long Format` for details
+
+`rw-r--r--` → file permissions; see `man ls`, `/owner permissions` for details
+
+`dstasczak` and `staff` → respectively the owner and the group of the file
+
+-->
+
+<!--
+
+# `ls -l` → List files in the long format
+
+Mnemonic: `The [l]ong format`
+
+```bash
+$ ls -l | head -8
+total 240
+-rw-r--r--   1 dstasczak  staff   `5793` 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff   ` 792` 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   `1067`  4 gru  2021 LICENSE
+-rw-r--r--   1 dstasczak  staff   `9496`  9 kwi  2022 README.md
+-rw-r--r--   1 dstasczak  staff   `2295` 16 gru 15:26 ROADMAP.md
+drwxr-xr-x   5 dstasczak  staff   ` 160` 18 gru 16:41 __pypackages__
+drwxr-xr-x   2 dstasczak  staff   `  64` 28 gru 23:17 build
+```
+
+ℹ️ See `man ls`, `/The Long Format` for details
+
+`rw-r--r--` → file permissions; see `man ls`, `/owner permissions` for details
+
+`dstasczak` and `staff` → respectively the owner and the group of the file
+
+`5793` → filesize
+
+-->
+
+<!--
+
+# `ls -l` → List files in the long format
+
+Mnemonic: `The [l]ong format`
+
+```bash
+$ ls -l | head -8
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 `28 gru 23:17` CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 `30 cze  2023` Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067 ` 4 gru  2021` LICENSE
+-rw-r--r--   1 dstasczak  staff   9496 ` 9 kwi  2022` README.md
+-rw-r--r--   1 dstasczak  staff   2295 `16 gru 15:26` ROADMAP.md
+drwxr-xr-x   5 dstasczak  staff    160 `18 gru 16:41` __pypackages__
+drwxr-xr-x   2 dstasczak  staff     64 `28 gru 23:17` build
+```
+
+ℹ️ See `man ls`, `/The Long Format` for details
+
+`rw-r--r--` → file permissions; see `man ls`, `/owner permissions` for details
+
+`dstasczak` and `staff` → respectively the owner and the group of the file
+
+`5793` → filesize
+
+`28 gru 23:17` → when the file was last modified
+
+-->
+
+<!--
+
+# `ls -h` → Human-readable filesize
+
+Mnemonic: `[h]uman-readable`
+
+```bash
+$ `ls -l` | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067  4 gru  2021 LICENSE
+```
+
+```bash
+$ `ls -lh` | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5.7K 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff   792B 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   1.0K  4 gru  2021 LICENSE
+```
+
+⚠️ Works as a complement to the `-l` (the long format).
+
+-->
+
+<!--
+
+# `ls -h` → Human-readable filesize
+
+Mnemonic: `[h]uman-readable`
+
+```bash
+$ ls -l | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   `5793` 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff   ` 792` 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   `1067`  4 gru  2021 LICENSE
+```
+
+```bash
+$ ls -lh | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   `5.7K` 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff   `792B` 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   `1.0K`  4 gru  2021 LICENSE
+```
+
+⚠️ Works as a complement to the `-l` (the long format).
+
+-->
+
+<!--
+
+# `ls -D` → Format datetime
+
+Mnemonic: `[D]atetime`
+
+```bash
+$ `ls -l` | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 28 gru 23:17 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 30 cze  2023 Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067  4 gru  2021 LICENSE
+```
+
+```bash
+$ `ls -lD '%F %T'` | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 2023-12-28 23:17:42 CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 2023-06-30 18:34:24 Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067 2021-12-04 11:24:15 LICENSE
+```
+
+⚠️ Works as a complement to the `-l` (the long format).
+
+-->
+
+<!--
+
+# `ls -D` → Format datetime
+
+Mnemonic: `[D]atetime`
+
+```bash
+$ ls -l | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 `28 gru 23:17` CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 `30 cze  2023` Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067 ` 4 gru  2021` LICENSE
+```
+
+```bash
+$ ls -lD '%F %T' | head -4
+total 240
+-rw-r--r--   1 dstasczak  staff   5793 `2023-12-28 23:17:42` CHANGELOG.md
+-rw-r--r--   1 dstasczak  staff    792 `2023-06-30 18:34:24` Dockerfile
+-rw-r--r--   1 dstasczak  staff   1067 `2021-12-04 11:24:15` LICENSE
+```
+
+⚠️ Works as a complement to the `-l` (the long format).
+
+-->
+
+<!--
+
+# `ls -D` → Format datetime
+
+ℹ️ See `man strftime`, `/The conversion specifications` for supported format patterns
+
+e.g.
+
+`%F %T` → `2024-02-21 16:20:21`
+
+`%a %F %T %Z` → `śro 2024-02-21 16:20:32 CET`
+
+`%b %Y` → `lut 2024`
+
+-->
+
+# `ls --color` → Colorize output
+
+```bash
+$ ls --color
+```
+
+![](images/ls--color.png)
+
+```bash
+$ ls --color -F
+```
+
+![](images/ls--color-F.png)
+
+---
+
+# `ls` → Other useful options
+
+```bash
+$ ls -1            # List one entry per line
+$ ls -l            # The long format
+$ ls -h            # Human-readable filesize
+$ ls -D <format>   # Format datetime
+```
+
+Probably for the next part of the series…
+
+---
+
+class: center, middle
+
+# Any questions about `ls`?
+
+Next: `cd`
+
+---
+
+# `cd` → Change working directory
+
+Mnemonic: `[c]hange [d]irectory`
+
+```bash
+$ cd <directory>
+```
+
+```bash
+$ cd -   # hyphen
+```
+
+```bash
+$ cd
+```
+
+```bash
+$ cd ..  # double dot
+```
+
+ℹ️ See `cd --help` for details
+
+---
+
+# `cd` → Change working directory
+
+```bash
+ ~$ cd development
+ ~/development$ cd projects
+ ~/development/projects$ cd onetimepass/docs
+ ~/development/projects/onetimepass/docs$
+```
+
+---
+
+# `cd` → Change working directory
+
+```bash
+ `~`$ cd development
+ ~/development$ cd projects
+ ~/development/projects$ cd onetimepass/docs
+ ~/development/projects/onetimepass/docs$
+```
+
+`~` → home directory, e.g. for me it's `/Users/dstasczak`
+
+---
+
+# `cd` → Change working directory
+
+```bash
+ ~$ `cd development`
+ `~/development`$ cd projects
+ ~/development/projects$ cd onetimepass/docs
+ ~/development/projects/onetimepass/docs$
+```
+
+`~` → home directory, e.g. for me it's `/Users/dstasczak`
+
+---
+
+# `cd` → Change working directory
+
+```bash
+ ~$ cd development
+ ~/development$ `cd projects`
+ `~/development/projects`$ cd onetimepass/docs
+ ~/development/projects/onetimepass/docs$
+```
+
+`~` → home directory, e.g. for me it's `/Users/dstasczak`
+
+---
+
+# `cd` → Change working directory
+
+```bash
+ ~$ cd development
+ ~/development$ cd projects
+ ~/development/projects$ `cd onetimepass/docs`
+ `~/development/projects/onetimepass/docs`$
+```
+
+`~` → home directory, e.g. for me it's `/Users/dstasczak`
+
+---
+
+# `cd` → Relative vs. absolute path
+
+```bash
+ ~/development$ cd projects
+ ~/development/projects$ cd onetimepass
+ ~/development/projects/onetimepass$ `cd ~/development/projects/buttercms`
+ `~/development/projects/buttercms`$
+```
+
+`~` → home directory, e.g. for me it's `/Users/dstasczak`
+
+---
+
+# `cd` → Change working directory
+
+```bash
+~$ cd nonexisting
+-bash: cd: nonexisting: No such file or directory
+~$
+```
+
+---
+
+# `cd` and `ls` → Dream team
+
+```bash
+ ~$ ls -F
+ Applications/   Library/        Music/          Templates/
+ Desktop/        Movies/         Pictures/
+ `Documents/`      Movies/         Public/
+ Downloads/      Music/          Sites/
+ ~$ cd `Documents`
+ ~/Documents$
+```
+
+---
+
+# `cd` → go to home directory
+
+```bash
+ ~/development/projects/onetimepass/docs$ cd
+ ~$
+```
+
+ℹ️ The same as `cd ~` (but shorter)
+
+---
+
+# `cd` → go to home directory
+
+```bash
+ `~/development/projects/onetimepass/docs`$ cd
+ ~$
+```
+
+ℹ️ The same as `cd ~` (but shorter)
+
+---
+
+# `cd` → go to home directory
+
+```bash
+ ~/development/projects/onetimepass/docs$ `cd`
+ `~`$
+```
+
+ℹ️ The same as `cd ~` (but shorter)
+
+---
+
+# `cd ..` → go to parent directory
+
+```bash
+ ~/development/projects/onetimepass$ cd ..
+ ~/development/projects$
+```
+
+---
+
+# `cd ..` → go to parent directory
+
+```bash
+ `~/development/projects/onetimepass`$ cd ..
+ ~/development/projects$
+```
+
+---
+
+# `cd ..` → go to parent directory
+
+```bash
+ ~/development/projects/onetimepass$ `cd ..`
+ `~/development/projects`$
+```
+
+---
+
+# `cd ..` → go to parent directory
+
+```bash
+ ~/development/projects/onetimepass$ `cd ../buttercms`
+ `~/development/projects/buttercms`$
+```
+
+---
+
+# `cd` → Useful options
+
+… Nothing worth mentioning at this level.
+
+---
+
+class: center, middle
+
+# Any questions about `cd`?
+
+Next: `cp`
+
+---
+
+# `cp` → Copy files
+
+Mnemonic: `[c]o[p]y`
+
+```bash
+$ cp <source> <target>
+```
+
+---
+
+# `cp` → Copy file to the new file
+
+```bash
+$ ls
+egg
+$ `cp egg ham`
+$ ls
+egg     ham
+```
+
+---
+
+# `cp` → Copy file(s) to the directory
+
+```bash
+$ ls -F
+can/    egg     ham
+$ ls -F can/
+$ `cp ham can`
+$ ls -F can/
+ham
+$ ls -F
+can/    egg     ham
+```
+
+--
+
+```bash
+$ ls -F
+can/    egg     ham
+$ ls -F can/
+$ `cp egg ham can`
+$ ls -F can/
+egg     ham
+$ ls -F
+can/    egg     ham
+```
+
+---
+
+# `cp` → Useful options
+
+```bash
+$ cp -R  # Copy directory and its content
+$ cp -v  # Verbose mode
+$ cp -i  # Prompt before overwriting files
+$ cp -n  # Do not overwrite files
+```
+
+---
+
+# `cp -R` → Copy directory
+
+Mnemonic: `[R]ecursively`
+
+```bash
+$ ls -F
+can/    trash/
+$ ls -F can
+egg     ham
+$ `cp can trash`
+cp: can is a directory (not copied).
+```
+
+---
+
+# `cp -R` → Copy directory
+
+Mnemonic: `[R]ecursively`
+
+```bash
+$ `cp -R can trash`
+$ ls -F trash
+can/
+$ ls -F trash/can
+egg     ham
+```
+
+---
+
+# `cp -v` → Verbose mode
+
+Mnemonic: `[v]erbose`
+
+```bash
+$ cp -v egg ham
+*egg -> ham
+```
+
+```bash
+$ cp -v egg ham can
+*egg -> can/egg
+*ham -> can/ham
+```
+
+```bash
+$ cp -vR can trash
+*can -> trash/can
+*can/egg -> trash/can/egg
+*can/ham -> trash/can/ham
+```
+
+---
+
+# `cp -i` → Prompt before overwriting files
+
+Mnemonic: `[i]nteractive`
+
+```bash
+$ ls
+egg
+$ cp -vi egg ham
+egg -> ham
+```
+
+---
+
+# `cp -i` → Prompt before overwriting files
+
+Mnemonic: `[i]nteractive`
+
+```bash
+$ ls
+egg     ham
+$ cp -vi egg ham
+*overwrite ham? (y/n [n]) n
+*not overwritten
+$ cp -vi egg ham
+*overwrite ham? (y/n [n]) y
+*egg -> ham
+```
+
+--
+
+⚠️ Very helpful to decrease the potential destructiveness of using `cp`
+
+---
+
+# `cp -n` → Do not overwrite files
+
+Mnemonic: `[n]o`
+
+Like `cp -i` if you always choose `n`.
+
+```bash
+$ cp -vn egg ham
+*ham not overwritten
+```
+
+⚠️ Very helpful to decrease the potential destructiveness of using `cp`
+
+---
+
+class: center, middle
+
+# Any questions about `cp`?
+
+Next: `rm`
+
+---
+
+# `rm` → Remove files
+
+Mnemonic: `[r]e[m]ove`
+
+```bash
+rm <file>
+```
+
+```bash
+rm <file1> <file2>
+```
+
+--
+
+⚠️ `rm` does _not_ put files in trash
+--
+; deleted files cannot be restored
+
+---
+
+# `rm` → Remove file(s)
+
+```bash
+$ ls
+egg     ham
+$ `rm ham`
+$ ls
+egg
+```
+
+--
+
+```bash
+$ ls
+egg     ham     spam
+$ `rm egg ham`
+$ ls
+spam
+```
+
+---
+
+# `rm` → Useful options
+
+```bash
+$ rm -r  # Remove directory and its content
+$ rm -v  # Verbose mode
+$ rm -i  # Prompt before removing files
+```
+
+---
+
+# `rm -r` → Remove directory
+
+Mnemonic: `[r]ecursively`
+
+ℹ️ Also available as `rm -R` (if you want consistency with `cp -R`)
+
+```bash
+$ ls -F
+can/
+$ ls -F can
+egg     ham
+$ `rm can`
+rm: can: is a directory
+$ ls -F can
+egg     ham
+```
+
+---
+
+# `rm -r` → Remove directory
+
+Mnemonic: `[r]ecursively`
+
+ℹ️ Also available as `rm -R` (if you want consistency with `cp -R`)
+
+```bash
+$ ls -F
+can/
+$ ls -F can
+egg     ham
+$ `rm -r can`
+$ ls -F can
+ls: can: No such file or directory
+```
+
+---
+
+# `rm -v` → Verbose mode
+
+Mnemonic: `[v]erbose`
+
+```bash
+$ rm -v egg ham
+*egg
+*ham
+```
+
+```bash
+$ rm -vr can
+*can/egg
+*can/ham
+*can
+```
+
+---
+
+# `rm -i` → Prompt before removing files
+
+Mnemonic: `[i]nteractive`
+
+```bash
+$ rm -vi ham
+*remove ham? n
+$ ls ham
+ham
+$ rm -vi ham
+*remove ham? y
+*ham
+$ ls ham
+ls: ham: No such file or directory
+```
+
+--
+
+⚠️ Very helpful to decrease the potential destructiveness of using `rm`
+
+---
+
+# `rm` → One last warning ⚠️ ⚠️ ⚠️
+
+Avoid:
+
+## macOS
+
+```bash
+$ sudo rm -rf /
+$ sudo grm -rf --no-preserve-root /
+```
+
+## Linux
+
+```bash
+$ sudo rm -rf --no-preserve-root /
+```
+
+---
+
+class: center, middle
+
+# Any questions about `rm`?
+
+Next: `mv`
+
+---
+
+# `mv` → Move or rename files
+
+Mnemonic: `[m]o[v]e`
+
+```bash
+$ mv <source> <target>
+```
+
+---
+
+# `mv` → Rename file
+
+Mnemonic: “move file to the new name”
+
+```bash
+$ ls
+egg
+$ `mv egg ham`
+$ ls
+ham
+```
+
+---
+
+# `mv` → Move file(s) between directories
+
+```bash
+$ ls -F
+can/    trash/
+$ ls -F can
+egg     ham
+$ ls -F trash
+$ `mv can/egg trash`
+$ ls -F can
+ham
+$ ls -F trash
+egg
+```
+
+--
+
+```bash
+$ ls -F
+can/    trash/
+$ ls -F can
+egg     ham
+$ ls -F trash
+$ `mv can/egg can/ham trash`
+$ ls -F can
+$ ls -F trash
+egg     ham
+```
+
+---
+
+# `mv` → Move directory
+
+```bash
+$ ls -F
+can/    trash/
+$ `mv can trash`
+$ ls -F can
+ls: can: No such file or directory
+$ ls -F trash
+can/    egg
+```
+
+---
+
+# `mv` → Useful options
+
+```bash
+$ mv -v  # Verbose mode
+$ mv -i  # Prompt before overwriting files
+$ mv -n  # Do not overwrite files
+```
+
+---
+
+# `mv -v` → Verbose mode
+
+Mnemonic: `[v]erbose`
+
+```bash
+$ mv -v egg ham
+*egg -> ham
+```
+
+```bash
+$ mv -v can/egg can/ham trash
+*can/egg -> trash/egg
+*can/ham -> trash/ham
+```
+
+```bash
+$ mv -v can trash
+*can -> trash/can
+```
+
+---
+
+# `mv -i` → Prompt before overwriting files
+
+Mnemonic: `[i]nteractive`
+
+```bash
+$ ls
+egg     ham
+$ mv -vi egg ham
+*overwrite ham? (y/n [n]) n
+*not overwritten
+$ mv -vi egg ham
+*overwrite ham? (y/n [n]) y
+*egg -> ham
+```
+
+--
+
+⚠️ Very helpful to decrease the potential destructiveness of using `cp`
+
+---
+
+# `mv -n` → Do not overwrite files
+
+Mnemonic: `[n]o`
+
+Like `mv -i` if you always choose `n`.
+
+```bash
+$ mv -vn egg ham
+*ham not overwritten
+```
+
+⚠️ Very helpful to decrease the potential destructiveness of using `mv`
+
+---
+
+class: center, middle
+
+# Any questions about `mv`?
+
+Next: The End 😢
+
+---
+
+class: center, middle
+
+# Any questions?
+
+It's the last chance!
+
+---
+
+class: center, middle
+
+# Thank you for your time! 💚
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        // Navigation options
+          navigation: {
+            // Enable or disable navigating using scroll
+            // Default: true
+            // Alternatives: false
+            scroll: false,
+
+            // Enable or disable navigation using touch
+            // Default: true
+            // Alternatives: false
+            touch: false,
+
+            // Enable or disable navigation using click
+            // Default: false
+            // Alternatives: true
+            click: false,
+          },
+        slideNumberFormat: '',
+        countIncrementalSlides: false,
+        highlightLines: true,
+        highlightStyle: "default",
+        highlightSpans: true,
+      });
+    </script>
+  </body>
+</html>
